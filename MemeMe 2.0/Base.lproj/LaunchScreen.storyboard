@@ -35,7 +35,7 @@
                                     <constraint firstAttribute="width" constant="240" id="n9N-fJ-AJa"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright 2017 Andrew Jackson" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ni6-tJ-FN6">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Copyright 2017 Andrew Jackson" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ni6-tJ-FN6" userLabel="Copyright">
                                 <rect key="frame" x="32" y="638" width="311" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -50,7 +50,7 @@
                                 <size key="shadowOffset" width="2" height="2"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.019813345749999999" green="0.38944616910000002" blue="0.54756832119999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.019813345745205879" green="0.38944616913795471" blue="0.54756832122802734" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="Ni6-tJ-FN6" secondAttribute="trailing" constant="16" id="0sf-KO-doL"/>
                             <constraint firstItem="us2-lB-2S1" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="K8I-CQ-Gre"/>
@@ -58,7 +58,6 @@
                             <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Ni6-tJ-FN6" secondAttribute="bottom" constant="8" id="Rez-8Z-zMD"/>
                             <constraint firstItem="DzV-0Y-dhc" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="TP2-MU-pSd"/>
                             <constraint firstItem="us2-lB-2S1" firstAttribute="top" secondItem="DzV-0Y-dhc" secondAttribute="bottom" constant="8" id="UzB-oX-Urk"/>
-                            <constraint firstItem="Ni6-tJ-FN6" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="rD4-Ef-N4h"/>
                             <constraint firstItem="us2-lB-2S1" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="sG2-JX-eXG"/>
                         </constraints>
                     </view>

@@ -8,8 +8,9 @@
 
 import UIKit
 
-class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeMeViewController: UIViewController, UINavigationControllerDelegate {
     
+    @IBOutlet var imageContainer: UIView!
     @IBOutlet var imageView: UIImageView!
     @IBOutlet var cameraButton: UIBarButtonItem!
     @IBOutlet var topTextField: UITextField!
@@ -17,6 +18,11 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     @IBOutlet var topToolbar: UIToolbar!
     @IBOutlet var bottomToolbar: UIToolbar!
     @IBOutlet var actionButton: UIBarButtonItem!
+    
+    @IBOutlet var leadingConstraint: NSLayoutConstraint!
+    @IBOutlet var trailingConstraint: NSLayoutConstraint!
+    @IBOutlet var topConstraint: NSLayoutConstraint!
+    @IBOutlet var bottomConstraint: NSLayoutConstraint!
     
     override var prefersStatusBarHidden: Bool {
         return true
@@ -31,6 +37,7 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setConstraintsForSize(size: view.frame.size)
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
         keyboardNotifications()
     }
@@ -38,6 +45,18 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillAppear(animated)
         unsubscribeKeyboardNotifications()
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        setConstraintsForSize(size: size)
+    }
+    
+    func setConstraintsForSize(size:CGSize) {
+        let tempBool = size.width > size.height ? true : false
+        leadingConstraint.isActive = !tempBool
+        trailingConstraint.isActive = !tempBool
+        topConstraint.isActive = tempBool
+        bottomConstraint.isActive = tempBool
     }
     
     func setupTextField(_ textField: UITextField, text: String) {
@@ -73,6 +92,73 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         return keyboardSize.cgRectValue.height
     }
     
+    @IBAction func pickImage(_ sender: Any) {
+        let button = sender as! UIBarButtonItem
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
+        imagePicker.sourceType = button.tag == 0 ? .camera : .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    @IBAction func cancelMeme(_ sender: Any) {
+        actionButton.isEnabled = false
+        imageView.image = nil
+        topTextField.text = "TOP"
+        bottomTextField.text = "BOTTOM"
+        dismiss(animated: true, completion: nil)
+    }
+    
+    @IBAction func shareMeme(_ sender: Any) {
+        let memeImage: UIImage = generateMeme()
+        let controller = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
+        controller.popoverPresentationController?.barButtonItem = actionButton
+        controller.completionWithItemsHandler = {( type, ok, items, error ) in
+            if ok {
+                self.saveMeme()
+            }
+        }
+        self.present(controller, animated: true, completion: nil)
+    }
+    
+    func generateMeme() -> UIImage {
+
+        // Capture entire screen in image
+        UIGraphicsBeginImageContext(self.view.frame.size)
+        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
+        let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        // Create a rect from imageView container view bounds
+        let rect: CGRect = imageContainer.bounds
+        let scale = memedImage.scale
+        let scaledRect = CGRect(x: imageContainer.frame.origin.x * scale, y: imageContainer.frame.origin.y * scale, width: rect.size.width * scale, height: rect.size.height * scale)
+
+        // Crop captured screen with rect created above and return just the contents of the image container view
+        if let cgImage = memedImage.cgImage?.cropping(to: scaledRect) {
+            let temp: UIImage = UIImage(cgImage: cgImage, scale: scale, orientation: .up)
+            return temp
+        } else {
+            return memedImage
+        }
+    }
+    
+    func saveMeme() {
+        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: generateMeme())
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.memes.append(meme)
+        dismiss(animated: true, completion: nil)
+    }
+    
+    let memeTextAttribs: [String:Any] = [
+        NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
+        NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
+        NSAttributedStringKey.font.rawValue: UIFont(name: "Impact", size: 40)!,
+        NSAttributedStringKey.strokeWidth.rawValue: -2]
+}
+
+extension MemeMeViewController: UITextFieldDelegate {
+    
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField.text == "TOP" || textField.text == "BOTTOM" {
             textField.text = ""
@@ -83,6 +169,9 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         textField.resignFirstResponder()
         return true
     }
+}
+
+extension MemeMeViewController: UIImagePickerControllerDelegate {
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         dismiss(animated: true, completion: nil)
@@ -99,65 +188,4 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate, U
         }
         dismiss(animated: true, completion: nil)
     }
-    
-    @IBAction func pickImage(_ sender: Any) {
-        let button = sender as! UIBarButtonItem
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.allowsEditing = true
-        imagePicker.sourceType = button.tag == 0 ? .camera : .photoLibrary
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-    @IBAction func cancelMeme(_ sender: Any) {
-        actionButton.isEnabled = false
-        imageView.image = nil
-        topTextField.text = "TOP"
-        bottomTextField.text = "BOTTOM"
-    }
-    
-    @IBAction func shareMeme(_ sender: Any) {
-        let memeImage: UIImage = generateMeme()
-        let controller = UIActivityViewController(activityItems: [memeImage], applicationActivities: nil)
-        controller.completionWithItemsHandler = {( type, ok, items, error ) in
-            if ok {
-                self.saveMeme()
-            }
-        }
-        self.present(controller, animated: true, completion: nil)
-    }
-    
-    func generateMeme() -> UIImage {
-        // Hide toolbar and navbar
-        setToolbarState(true)
-        // Render view to an image
-        UIGraphicsBeginImageContext(self.view.frame.size)
-        view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
-        let memedImage:UIImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        
-        // Show toolbar and navbar
-        setToolbarState(false)
-        
-        return memedImage
-    }
-    
-    func saveMeme() {
-        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imageView.image!, memedImage: generateMeme())
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.memes.append(meme)
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func setToolbarState(_ hidden: Bool) {
-        topToolbar.isHidden = hidden
-        bottomToolbar.isHidden = hidden
-    }
-    
-    let memeTextAttribs: [String:Any] = [
-        NSAttributedStringKey.strokeColor.rawValue: UIColor.black,
-        NSAttributedStringKey.foregroundColor.rawValue: UIColor.white,
-        NSAttributedStringKey.font.rawValue: UIFont(name: "Impact", size: 40)!,
-        NSAttributedStringKey.strokeWidth.rawValue: -2]
 }
-
