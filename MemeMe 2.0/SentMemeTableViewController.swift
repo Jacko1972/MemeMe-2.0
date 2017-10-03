@@ -23,10 +23,6 @@ class SentMemeTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         appDelegate.memes.count == 0 ? showEmptyView(true) : showEmptyView(false)
         return appDelegate.memes.count

@@ -14,6 +14,7 @@
 		D71066141F7D809A009B7754 /* MemeDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71066131F7D809A009B7754 /* MemeDetailViewController.swift */; };
 		D71066161F7D83CF009B7754 /* SentMemeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71066151F7D83CE009B7754 /* SentMemeTableViewCell.swift */; };
 		D71066181F7D879E009B7754 /* SentMemeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71066171F7D879E009B7754 /* SentMemeCollectionViewCell.swift */; };
+		D74D902B1F83FB3100AB7A9A /* MemeMeView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D74D90291F83B1DC00AB7A9A /* MemeMeView.storyboard */; };
 		D786A7271F7E9D0600FA430E /* Impact.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D786A7261F7E9C8B00FA430E /* Impact.ttf */; };
 		D792CD151F72F94B00FF3741 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D792CD141F72F94B00FF3741 /* AppDelegate.swift */; };
 		D792CD1C1F72F94B00FF3741 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D792CD1A1F72F94B00FF3741 /* Main.storyboard */; };
@@ -147,6 +148,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D786A7271F7E9D0600FA430E /* Impact.ttf in Resources */,
+				D74D902B1F83FB3100AB7A9A /* MemeMeView.storyboard in Resources */,
 				D792CD211F72F94B00FF3741 /* LaunchScreen.storyboard in Resources */,
 				D792CD1E1F72F94B00FF3741 /* Assets.xcassets in Resources */,
 				D792CD1C1F72F94B00FF3741 /* Main.storyboard in Resources */,
